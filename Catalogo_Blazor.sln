@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31019.35
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalogo_Blazor.Server", "Catalogo_Blazor\Server\Catalogo_Blazor.Server.csproj", "{499CEEA9-23AD-4382-8701-D30D9BFF0E94}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalogo_Blazor.Server", "Catalogo_Blazor\Server\Catalogo_Blazor.Server.csproj", "{499CEEA9-23AD-4382-8701-D30D9BFF0E94}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalogo_Blazor.Client", "Catalogo_Blazor\Client\Catalogo_Blazor.Client.csproj", "{E78ED697-5A84-4737-86D1-3C8EEE15FBBD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalogo_Blazor.Client", "Catalogo_Blazor\Client\Catalogo_Blazor.Client.csproj", "{E78ED697-5A84-4737-86D1-3C8EEE15FBBD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalogo_Blazor.Shared", "Catalogo_Blazor\Shared\Catalogo_Blazor.Shared.csproj", "{CECE9997-679D-414A-B0CD-2FBCC88E7A50}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalogo_Blazor.Shared", "Catalogo_Blazor\Shared\Catalogo_Blazor.Shared.csproj", "{CECE9997-679D-414A-B0CD-2FBCC88E7A50}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
