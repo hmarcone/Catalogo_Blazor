@@ -61,21 +61,21 @@ else
     public async Task CarregaCategorias()
     {
         categorias = await http.GetFromJsonAsync<Categoria[]>("/api/categoria");
-        categorias = new Categoria[]
-        {
-            new Categoria()
-            {
-                CategoriaId = 1,
-                Nome = "Eletrônicos",
-                Descricao = "Produtos eletrônicos"
-            },
-            new Categoria()
-            {
-                CategoriaId = 2,
-                Nome = "Smartphones",
-                Descricao = "Dispositivos Smartphones"
-            }
-        };
+        //categorias = new Categoria[]
+        //{
+        //    new Categoria()
+        //    {
+        //        CategoriaId = 1,
+        //        Nome = "Eletrônicos",
+        //        Descricao = "Produtos eletrônicos"
+        //    },
+        //    new Categoria()
+        //    {
+        //        CategoriaId = 2,
+        //        Nome = "Smartphones",
+        //        Descricao = "Dispositivos Smartphones"
+        //    }
+        //};
     }
 
     void DeletarCategoria(int categoriaId)
