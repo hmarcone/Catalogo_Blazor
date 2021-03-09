@@ -5,6 +5,7 @@ using Blazor_Catalogo.Shared.Recursos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Catalogo_Blazor.Server.Controllers
@@ -21,9 +22,15 @@ namespace Catalogo_Blazor.Server.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Categoria>>> Get([FromQuery] Paginacao paginacao)
+        public async Task<ActionResult<List<Categoria>>> Get([FromQuery] Paginacao paginacao, [FromQuery] string filtroNome)
         {
             var queryable = context.Categorias.AsQueryable();
+
+            if (!string.IsNullOrEmpty(filtroNome))
+            {
+                queryable = queryable.Where(n => n.Nome.Contains(filtroNome));
+            }
+
             await HttpContext.InserirParametroEmPageResponse(queryable, paginacao.QuantidadePorPagina);
 
             //return await context.Categorias.AsNoTracking().ToListAsync();
