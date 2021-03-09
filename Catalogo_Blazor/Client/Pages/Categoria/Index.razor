@@ -1,11 +1,18 @@
 ﻿@page "/categoria"
 @inject HttpClient  http
+@using System.Text.Json
+
+<div>
+    <a class="btn btn-success" href="categoria/create">Nova Categoria</a>
+</div>
+
+<br/>
 
 @if (categorias == null)
 {
     <p><em>Carregando...</em></p>
 }
-else if (categorias.Length == 0)
+else if (categorias.Count == 0)
 {
     <p><em>Não existem categorias cadastradas...</em></p>
 }
@@ -40,14 +47,17 @@ else
 
 <hr />
 
-<div>
-    <a class="btn btn-success" href="categoria/create">Nova Categoria</a>
-</div>
+<Paginacao QuantidadeTotalPaginas="QuantidadeTotalPaginas" paginaAtual="paginaAtual"
+           Raio="2" PaginaSelecionada="PaginaSelecionada">
 
+</Paginacao>
 
 @code {
 
-    Categoria[] categorias { get; set; }
+    List<Categoria> categorias { get; set; }
+
+    private int QuantidadeTotalPaginas;
+    private int paginaAtual = 1;
 
     Confirma confirma;
 
@@ -58,10 +68,32 @@ else
         await CarregaCategorias();
     }
 
-    public async Task CarregaCategorias()
+    private async Task PaginaSelecionada(int pagina)
     {
-        categorias = await http.GetFromJsonAsync<Categoria[]>("/api/categoria");
-        //categorias = new Categoria[]
+        paginaAtual = pagina;
+        await CarregaCategorias(pagina);
+    }
+
+    public async Task CarregaCategorias(int pagina = 1, int quantidadePorPagina = 5)
+    {
+        var httpResponse =
+                    await http.GetAsync($"api/categoria?pagina={pagina}&quantidadePorPagina={quantidadePorPagina}");
+
+        if (httpResponse.IsSuccessStatusCode)
+        {
+            QuantidadeTotalPaginas =
+                int.Parse(httpResponse.Headers.GetValues("totalPaginas").FirstOrDefault());
+
+            var responseString = await httpResponse.Content.ReadAsStringAsync();
+
+            categorias = JsonSerializer.Deserialize<List<Categoria>>(responseString,
+                new JsonSerializerOptions()
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+        }
+        //categorias = await http.GetFromJsonAsync<List<Categoria>>("/api/categoria");
+        //categorias = new List<Categoria>
         //{
         //    new Categoria()
         //    {

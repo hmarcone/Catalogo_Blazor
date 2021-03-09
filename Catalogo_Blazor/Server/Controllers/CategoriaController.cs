@@ -1,5 +1,7 @@
 ﻿using Blazor_Catalogo.Server.Context;
+using Blazor_Catalogo.Server.Utils;
 using Blazor_Catalogo.Shared.Models;
+using Blazor_Catalogo.Shared.Recursos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -19,9 +21,14 @@ namespace Catalogo_Blazor.Server.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Categoria>>> Get()
+        public async Task<ActionResult<List<Categoria>>> Get([FromQuery] Paginacao paginacao)
         {
-            return await context.Categorias.AsNoTracking().ToListAsync();
+            var queryable = context.Categorias.AsQueryable();
+            await HttpContext.InserirParametroEmPageResponse(queryable, paginacao.QuantidadePorPagina);
+
+            //return await context.Categorias.AsNoTracking().ToListAsync();
+
+            return await queryable.Paginar(paginacao).ToListAsync();
         }
 
         [HttpGet("{id}", Name = "GetCategoria")]
