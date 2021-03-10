@@ -87,7 +87,6 @@
 
     protected async override Task OnInitializedAsync()
     {
-        Produto.ImagemUrl = null;
         await CarregaCategorias();
     }
 
