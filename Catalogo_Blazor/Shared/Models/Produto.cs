@@ -17,8 +17,7 @@ namespace Blazor_Catalogo.Shared.Models
 
         [Required(ErrorMessage = "Informe o preço do produto")]
         public decimal Preco { get; set; }
-
-        [MaxLength(250)]
+       
         public string ImagemUrl { get; set; }
 
         //indica o relacionamento
