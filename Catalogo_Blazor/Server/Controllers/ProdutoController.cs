@@ -1,8 +1,11 @@
 ﻿using Blazor_Catalogo.Server.Context;
+using Blazor_Catalogo.Server.Utils;
 using Blazor_Catalogo.Shared.Models;
+using Blazor_Catalogo.Shared.Recursos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Catalogo_Blazor.Server.Controllers
@@ -17,10 +20,33 @@ namespace Catalogo_Blazor.Server.Controllers
             this.context = context;
         }
 
-        [HttpGet]
+        [HttpGet("categorias/{id:int}")]
+        public async Task<ActionResult<List<Produto>>> GetProdutosCategoria(int id)
+        {
+            return await context.Produtos.Where(p => p.CategoriaId == id).ToListAsync();
+        }
+
+        [HttpGet("todos")]
         public async Task<ActionResult<List<Produto>>> Get()
         {
             return await context.Produtos.AsNoTracking().ToListAsync();
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<List<Produto>>> Get([FromQuery] Paginacao paginacao,
+            [FromQuery] string nome)
+        {
+            var queryable = context.Produtos.AsQueryable();
+
+            if (!string.IsNullOrEmpty(nome))
+            {
+                queryable = queryable.Where(x => x.Nome.Contains(nome));
+            }
+
+            await HttpContext.InserirParametroEmPageResponse(queryable,
+                paginacao.QuantidadePorPagina);
+
+            return await queryable.Paginar(paginacao).ToListAsync();
         }
 
         [HttpGet("{id}", Name = "GetProduto")]
