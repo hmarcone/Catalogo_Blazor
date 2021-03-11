@@ -26,6 +26,24 @@ namespace Catalogo_Blazor.Server.Controllers
             return await context.Produtos.Where(p => p.CategoriaId == id).ToListAsync();
         }
 
+        [HttpGet("categoriaWithProduto")]
+        public int GetCategoria()
+        {
+            var categorias = context.Categorias.AsNoTracking().ToList();
+            int produtos = 0;
+
+            foreach (var item in categorias)
+            {
+                produtos = context.Produtos.Where(p => p.CategoriaId == item.CategoriaId).Count();
+
+                if(produtos > 0)
+                {
+                    return item.CategoriaId;
+                }
+            }
+            return produtos;
+        }
+
         [HttpGet("todos")]
         public async Task<ActionResult<List<Produto>>> Get()
         {
