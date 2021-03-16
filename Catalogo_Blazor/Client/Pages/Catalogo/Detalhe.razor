@@ -1,9 +1,10 @@
 ﻿@page "/produto/detalhe/{produtoid:int}"
 @inject HttpClient  http
+@attribute [Authorize(Roles = "Admin")]
 
     <div class="col-sm-12 col-lg-12 col-md-12">
         <div class="card" style="border: none">
-            <img src="data:image/jpge;base64,@produto.ImagemUrl" class="img-rounded"
+            <img src = "data:image/jpge;base64,@produto.ImagemUrl" class="img-rounded"
                  alt="@produto.Nome" width="300" height="300" />
             <div class="card-body">
                 <h3 class="pull-right">@produto.Preco</h3>
@@ -14,7 +15,7 @@
     </div>
 
 <div>
-    <a href="/catalogo/@produto.CategoriaId" class="btn btn-link">Retornar</a>
+    <a href = "/catalogo/@produto.CategoriaId" class="btn btn-link">Retornar</a>
 </div>
 
 @code {
