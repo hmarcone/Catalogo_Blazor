@@ -1,18 +1,19 @@
 using Blazor_Catalogo.Server.Context;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System.Configuration;
-using System.Linq;
+using Microsoft.IdentityModel.Tokens;
+using System;
+using System.Text;
 
 namespace Catalogo_Blazor.Server
 {
-    public class Startup
+	public class Startup
     {
         public Startup(IConfiguration configuration)
         {
@@ -27,6 +28,26 @@ namespace Catalogo_Blazor.Server
         {
             services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddEntityFrameworkStores<AppDbContext>()
+                .AddDefaultTokenProviders();
+
+            var chave = Encoding.UTF8.GetBytes(Configuration["jwt:key"]);
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                            .AddJwtBearer(options =>
+                             options.TokenValidationParameters = new TokenValidationParameters
+                             {
+                                 ValidateIssuer = false,
+                                 ValidateAudience = false,
+                                 ValidateLifetime = true,
+                                 ValidateIssuerSigningKey = true,
+                                 IssuerSigningKey = new SymmetricSecurityKey(
+                                 Encoding.UTF8.GetBytes(Configuration["jwt:key"])),
+                                 ClockSkew = TimeSpan.Zero
+                             }
+                            );
 
             services.AddControllersWithViews();
             services.AddRazorPages();
