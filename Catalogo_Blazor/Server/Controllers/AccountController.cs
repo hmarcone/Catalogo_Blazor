@@ -46,7 +46,17 @@ namespace Catalogo_Blazor.Server.Controllers
 
             if (result.Succeeded)
             {
-                return GenerateToken(model);
+                // Incluir o novo usuário ao perfil User
+
+                await _userManager.AddToRoleAsync(user, "User");
+
+                //incluir um novo usuário com email que começa com admin no perfil Admin
+                if (user.Email.StartsWith("admin"))
+                {
+                    await _userManager.AddToRoleAsync(user, "Admin");
+                }
+
+                return await GenerateToken(model);
             }
             else
             {
@@ -62,7 +72,7 @@ namespace Catalogo_Blazor.Server.Controllers
 
             if (result.Succeeded)
             {
-                return GenerateToken(userInfo);
+                return await GenerateToken(userInfo);
             }
             else
             {
@@ -70,15 +80,29 @@ namespace Catalogo_Blazor.Server.Controllers
             }
         }
 
-        private UserToken GenerateToken(UserInfo userInfo)
+        private async Task<UserToken> GenerateToken(UserInfo userInfo)
         {
-            var claims = new List<Claim>()
+            //var claims = new List<Claim>()
+            //{
+            //    new Claim(JwtRegisteredClaimNames.UniqueName, userInfo.Email),
+            //    new Claim(ClaimTypes.Name, userInfo.Email),
+            //    new Claim("hma", "hmarcone"),
+            //    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            //};
+
+            var user = await _signInManager.UserManager.FindByEmailAsync(userInfo.Email);
+
+            var roles = await _signInManager.UserManager.GetRolesAsync(user);
+
+            var claims = new List<Claim>
             {
-                new Claim(JwtRegisteredClaimNames.UniqueName, userInfo.Email),
-                new Claim(ClaimTypes.Name, userInfo.Email),
-                new Claim("hma", "hmarcone"),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                new Claim(ClaimTypes.Name, userInfo.Email)
             };
+
+            foreach (var role in roles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:key"]));
             var creds =
