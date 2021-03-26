@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Blazor_Catalogo.Shared.Models
 {
@@ -16,6 +17,7 @@ namespace Blazor_Catalogo.Shared.Models
         public string Descricao { get; set; }
 
         [Required(ErrorMessage = "Informe o preço do produto")]
+        [Column(TypeName = "decimal(18,2)")]
         public decimal Preco { get; set; }
        
         public string ImagemUrl { get; set; }

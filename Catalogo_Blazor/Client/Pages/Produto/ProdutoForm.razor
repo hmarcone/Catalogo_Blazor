@@ -89,6 +89,10 @@
     {
         Produto.ImagemUrl = null;
         await CarregaCategorias();
+        if (Produto.CategoriaId == 0)
+        {
+            Produto.CategoriaId = categorias[0].CategoriaId;
+        }
     }
 
     private async Task CarregaCategorias()
